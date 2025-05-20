@@ -8,13 +8,13 @@ Module Program
         Dim choice As Integer
 
         Do
-            Console.WriteLine("=== Student Records Management ===")
+            Console.WriteLine("Student  Management ")
             Console.WriteLine("1. Add Student")
             Console.WriteLine("2. View Students")
             Console.WriteLine("3. Update Student")
             Console.WriteLine("4. Delete Student")
             Console.WriteLine("5. Exit")
-            Console.Write("Enter choice: ")
+            Console.Write("Enter menu: ")
             Integer.TryParse(Console.ReadLine(), choice)
 
             Select Case choice
@@ -65,10 +65,17 @@ Module Program
         Console.Write("Enter new name: ")
         Dim newName = Console.ReadLine()
 
+        ' Ask for new age as well
+        Console.Write("Enter new age: ")
+        Dim newAge As Integer
+        Integer.TryParse(Console.ReadLine(), newAge)
+
         Using conn As New NpgsqlConnection(connString)
             conn.Open()
-            Dim cmd As New NpgsqlCommand("UPDATE students SET name = @name WHERE id = @id", conn)
+            ' Update both name and age
+            Dim cmd As New NpgsqlCommand("UPDATE students SET name = @name, age = @age WHERE id = @id", conn)
             cmd.Parameters.AddWithValue("name", newName)
+            cmd.Parameters.AddWithValue("age", newAge)
             cmd.Parameters.AddWithValue("id", id)
             cmd.ExecuteNonQuery()
             Console.WriteLine("Student updated.")
